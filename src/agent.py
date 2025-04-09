@@ -112,7 +112,6 @@ class Tutor:
         returns_tensor: Tensor = torch.tensor(returns, dtype=torch.float32)
         # concatenate value estimates V(s_0), V(s_1), ..., V(s_T)
         values_tensor: Tensor = torch.cat(values)
-        returns = torch.tensor(returns)
 
         # Advantage: A(s, a) = R - V(s)
         advantages: Tensor = returns_tensor - values_tensor
@@ -120,7 +119,7 @@ class Tutor:
         advantages = (advantages - advantages.mean()) / (advantages.std() + 1e-8)
         # calculate policy loss
         # L_policy = -\mathbb{E} \left[ \log{\pi}(a|s)\hat{A}(s, a) ]\right
-        l_policy: Tensor = (-torch.cat(log_probs) * advantages.detach()).mean()
+        l_policy: Tensor = (-torch.cat([lp.unsqueeze(0) for lp in log_probs]) * advantages.detach()).mean()
         # entropy loss for exploration
         # L_entropy = -\beta * \mathbb{E} [ H (\pi(. | s)) ]
         l_entropy: Tensor = -torch.cat(entropies).mean() * self.beta
