@@ -43,8 +43,12 @@ class Student:
         self.w = w
 
         if initial_probs is None:
+            base = np.random.uniform(0.5, 0.9)  # Varied starting point
+            decline = np.random.uniform(0.1, 0.3)  # Random difficulty curve
             self.probs = np.linspace(
-                start=0.7, stop=0.3, num=num_difficulty_levels
+                start=base,
+                stop=base-decline,
+                num=num_difficulty_levels
             )
         else:
             assert len(initial_probs) == num_difficulty_levels
@@ -245,10 +249,10 @@ class ExamEnv:
         new_prob_success = self.student.probs[action]
         # rewards
         # incentive for harder questions
-        difficulty_bonus = (action + 1) * 2
+        difficulty_bonus = (action + 1) * 5
         # incentivize improvement
         improvement_reward = 10 * (new_prob_success - old_prob_success)
-        correct_reward = 4 * correct
+        correct_reward = 6 * correct
         # consistency reward
         consistency_reward = 0.0
         if len(self.difficulties) >= 5:
