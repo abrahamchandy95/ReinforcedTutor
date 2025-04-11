@@ -137,7 +137,7 @@ The critic estimates the state value using a tanh activation:
 
 $V(s) = \tanh(w^T h + b)$
 
-where h is the hidden layer output.\
+where h is the hidden layer output.
 
 The Actor-Critic algorithm combines policy optimization with value estimation.
 
