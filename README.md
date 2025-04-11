@@ -8,7 +8,7 @@ This API helps **students optimize their study time** by:
 - **Confidence building** through strategic challenge scaling
 - **Smart preparation** for exams with mixed-difficulty questions
 
-Designed as the **AI core** for an educational app 
+Designed as the **AI core** for an educational app
 - handles the recommendation logic while the app handles UI/question delivery.
 
 ## Workflow Diagram
@@ -62,6 +62,10 @@ For 20 questions: [4, 3, 1, 1, 4, 4, 3, 4, 0, 3, 3, 0, 4, 3, 1, 4, 1, 1, 4, 4]
 
 ## 🎓 Training the Model
 
+After cloning the repo please install the required packages with
+```bash
+pip install -r requirements.txt
+```
 ### Quick Start Training
 ```bash
 # Train model with default settings (saves to models/agent.pth)
@@ -70,7 +74,7 @@ python src.train.py
 # Train with progress visualization
 python src.train --plot
 ```
-Note: The model was trained on synthetic data. For better performance, it would be 
+Note: The model was trained on synthetic data. For better performance, it would be
 better to train the model on real data.
 
 ## Evaluation
