@@ -84,11 +84,19 @@ python src.main
 
 ### Student Model (Knowledge Tracking)
 This model shows the student's knowledge progression. For difficulty level i \
-Probability update when correct is:\
+Probability update when correct is:
 
-$p_i^{(t+1)} = \min\left(p_i^{(t)} + c \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1+\frac{i}{N}\right), 0.95\right)$
-Probability update when incorrect is:\
-$p_i^{(t+1)} = \max\left(p_i^{(t)} - w \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1-\frac{i}{2N}\right), 0.05\right)$
+$$
+p_i^{(t+1)} = \min\left(p_i^{(t)} + c \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1+\frac{i}{N}\right), 0.95\right)
+$$
+
+Probability update when incorrect is:
+
+$$
+p_i^{(t+1)} = \max\left(p_i^{(t)} - w \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1-\frac{i}{2N}\right), 0.05\right)
+$$
+
+
 Original Paper Equations (Malpani et al.)
 
 Correct Answer Update:
@@ -138,7 +146,9 @@ The advantage measures how much better an action was compared to the critic's ex
 * Positive advantage = action was better than average
 * Negative advantage = action was worse than average
 
-$A(s_t,a_t) = \underbrace{\sum_{k=0}^{T-t} \gamma^k r_{t+k}}_{\text{Actual Return}} - \underbrace{V(s_t)}_{\text{Critic's Prediction}}$
+$$
+A(s_t,a_t) = \underbrace{\sum_{k=0}^{T-t} \gamma^k r_{t+k}}_{\text{Actual Return}} - \underbrace{V(s_t)}_{\text{Critic's Prediction}}
+$$
 
 In the code, advantage was returns - values where returns was the discounted cumulative rewards.
 
@@ -171,9 +181,7 @@ $V(s) \leftarrow V(s) + \alpha\left[\sum_{k=0}^\infty \gamma^k r_{t+k} - V(s)\ri
 
 ### Entropy Regularization
 Encourages exploration through:
-\begin{equation}
-H(\pi) = -\sum_a \pi(a|s)\log\pi(a|s)
-\end{equation}
+$H(\pi) = -\sum_a \pi(a|s)\log\pi(a|s)$
 
 ## Hyperparameters
 
