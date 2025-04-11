@@ -147,9 +147,8 @@ The advantage measures how much better an action was compared to the critic's ex
 * Negative advantage = action was worse than average
 
 $$
-A(s_t,a_t) = \underbrace{\sum_{k=0}^{T-t} \gamma^k r_{t+k}}_{\text{Actual Return}} - \underbrace{V(s_t)}_{\text{Critic\'s Prediction}}
+A(s_t,a_t) = \underbrace{\sum_{k=0}^{T-t} \gamma^k r_{t+k}}_{\text{Actual Return}} - \underbrace{V(s_t)}_{\text{"Critic's Prediction"}}
 $$
-
 
 In the code, advantage was returns - values where returns was the discounted cumulative rewards.
 
@@ -166,12 +165,13 @@ $L_{V} = \frac{1}{T} \sum_{t=0}^T (V(s_t) - \text{Actual Return})^2$
 Simulates the tutoring process and calculates rewards
 
 $$
-\text{State} = [p_1, p_2, p_3, p_4, p_5, \underbrace{\frac{\text{current\_step}}{\text{total\_steps}}}_{\text{progress}}, \underbrace{1 - \frac{\text{current\_step}}{\text{total\_steps}}}_{\text{remaining}}]
+\text{State} = [p_1, p_2, p_3, p_4, p_5, \underbrace{\frac{\text{currentstep}}{\text{totalsteps}}}_{\text{progress}}, \underbrace{1 - \frac{\text{currentstep}}{\text{totalsteps}}}_{\text{remaining}}]
 $$
 
 where $p_i$ = probability for difficulty i
 
 ### Reward Function
+
 $$
 \text{Reward} = \underbrace{(a+1)\cdot0.2}_{\text{Difficulty bonus}} + \underbrace{10(p_{new}-p_{old})}_{\text{Improvement}} + \underbrace{2\cdot\text{correct}}_{\text{Correctness}}
 $$
