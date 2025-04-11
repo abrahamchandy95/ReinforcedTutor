@@ -173,8 +173,32 @@ where $p_i$ = probability for difficulty i
 ### Reward Function
 
 $$
-R = w_1\,R_{\text{difficulty}} + w_2\,R_{\text{improvement}} + w_3\,R_{\text{correctness}} + w_4\,R_{\text{consistency}}
+R = 5(a+1) + 10(p_{\text{new}} - p_{\text{old}}) + 6c +
+\begin{cases}
+0.5(1 - \sigma), & \text{if } n \ge 5 \\
+0, & \text{if } n < 5
+\end{cases}
 $$
+
+where:
+
+
+- $ a $: Action (difficulty level selected by the agent).
+
+- $ p_{\text{new}} $: Updated success probability after the action.
+
+- $ p_{\text{old}} $: Previous success probability before the action.
+
+- $ c $: Binary correctness indicator ($ 1 $ for correct, $ 0 $ for incorrect).
+
+- $ n $: Number of stored difficulty levels (from \texttt{self.difficulties}).
+
+- $ \sigma $: Standard deviation of difficulties (\texttt{np.std(self.difficulties)}).
+
+The function incentivizes harder questions via $ 5(a+1) $, rewards improvement
+through $ 10(p_{\text{new}} - p_{\text{old}}) $, grants $ 6c $ for correct answers,
+and encourages consistency by penalizing variability in difficulties when $ n \geq 5 $.
+
 
 ### Gradient Policy Theorem
 The core update rule for policy parameters $\theta$:
