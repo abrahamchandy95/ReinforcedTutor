@@ -173,7 +173,11 @@ where $p_i$ = probability for difficulty i
 ### Reward Function
 
 $$
-\text{Reward} = (a+1)\cdot 0.2 \;+\; 10\,(p_{\text{new}} - p_{\text{old}}) \;+\; 2\cdot \text{correct}
+R = 5(a+1) \;+\; 10\,(p_{\text{new}} - p_{\text{old}}) \;+\; 6\,c \;+\;
+\begin{cases}
+0.5\,(1 - \sigma), & \text{if } n \ge 5 \\
+0, & \text{if } n < 5
+\end{cases}
 $$
 
 ### Gradient Policy Theorem
