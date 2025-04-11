@@ -85,24 +85,19 @@ python src.main
 ### Student Model (Knowledge Tracking)
 This model shows the student's knowledge progression. For difficulty level i \
 Probability update when correct is:\
-\begin{equation}
-p_i^{(t+1)} = \min\left(p_i^{(t)} + c \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1+\frac{i}{N}\right), 0.95\right)
-\end{equation}
+
+$p_i^{(t+1)} = \min\left(p_i^{(t)} + c \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1+\frac{i}{N}\right), 0.95\right)$
 Probability update when incorrect is:\
-\begin{equation}
-p_i^{(t+1)} = \max\left(p_i^{(t)} - w \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1-\frac{i}{2N}\right), 0.05\right)
-\end{equation}
+$p_i^{(t+1)} = \max\left(p_i^{(t)} - w \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1-\frac{i}{2N}\right), 0.05\right)$
 Original Paper Equations (Malpani et al.)
 
 Correct Answer Update:
-\begin{equation}
-p_i^{(t+1)} = p_i^{(t)} + c \cdot \alpha p_i(1-p_i)
-\end{equation}
+
+$p_i^{(t+1)} = p_i^{(t)} + c \cdot \alpha p_i(1-p_i)$
 
 Incorrect Answer Update:
-\begin{equation}
-p_i^{(t+1)} = p_i^{(t)} - w \cdot \alpha p_i(1-p_i)
-\end{equation}
+
+$p_i^{(t+1)} = p_i^{(t)} - w \cdot \alpha p_i(1-p_i)$
 
 (In our approach, we added a difficulty modulation)
 When the user fails a difficult question, the system penalizes the user less than failing an easy question as N increases. this is why the smoothening uses 2N as the denominator for punishment but only N when rewarding.
@@ -128,14 +123,12 @@ Input (State)\
    ├─ Actor Head (Softmax) → Action Probabilities\
    └─ Critic Head (Tanh) → State Value
 
-The shared layers learn general features, and the actor outputs the probability distribution over actions using softmax:\
-\begin{equation}
-\pi(a|s) = \frac{e^{z_a}}{\sum_{b}e^{z_b}}
-\end{equation}
+The shared layers learn general features, and the actor outputs the probability distribution over actions using softmax:
+$\pi(a|s) = \frac{e^{z_a}}{\sum_{b}e^{z_b}}$
 The critic estimates the state value using a tanh activation:
-\begin{equation}
-V(s) = \tanh(w^T h + b)
-\end{equation}
+
+$V(s) = \tanh(w^T h + b)$
+
 where h is the hidden layer output.\
 
 The Actor-Critic algorithm combines policy optimization with value estimation.
@@ -145,50 +138,36 @@ The advantage measures how much better an action was compared to the critic's ex
 * Positive advantage = action was better than average
 * Negative advantage = action was worse than average
 
-\begin{equation}
-A(s_t,a_t) = \underbrace{\sum_{k=0}^{T-t} \gamma^k r_{t+k}}_{\text{Actual Return}} - \underbrace{V(s_t)}_{\text{Critic's Prediction}}
-\end{equation}
+$A(s_t,a_t) = \underbrace{\sum_{k=0}^{T-t} \gamma^k r_{t+k}}_{\text{Actual Return}} - \underbrace{V(s_t)}_{\text{Critic's Prediction}}$
 
 In the code, advantage was returns - values where returns was the discounted cumulative rewards.
 
 Policy Loss:\
 This adjusts the Actor network to favor actions that lead to higher than expected rewards.
-\begin{equation}
-L_{\pi} = -\frac{1}{T} \sum_{t=0}^T \log\pi(a_t|s_t) \cdot A(s_t,a_t)
-\end{equation}
+$L_{\pi} = -\frac{1}{T} \sum_{t=0}^T \log\pi(a_t|s_t) \cdot A(s_t,a_t)$
 
 Value Loss:\
 Trains the critic to better estimate state values
-\begin{equation}
-L_{V} = \frac{1}{T} \sum_{t=0}^T (V(s_t) - \text{Actual Return})^2
-\end{equation}
+$L_{V} = \frac{1}{T} \sum_{t=0}^T (V(s_t) - \text{Actual Return})^2$
 
 ### Environment (TutoringEnv)
 
 Simulates the tutoring process and calculates rewards
-\begin{equation}
-\text{State} = [p_1, p_2, p_3, p_4, p_5, \underbrace{\frac{\text{current\_step}}{\text{total\_steps}}}_{\text{progress}}, \underbrace{1 - \frac{\text{current\_step}}{\text{total\_steps}}}_{\text{remaining}}]
-\end{equation}
+$\text{State} = [p_1, p_2, p_3, p_4, p_5, \underbrace{\frac{\text{current\_step}}{\text{total\_steps}}}_{\text{progress}}, \underbrace{1 - \frac{\text{current\_step}}{\text{total\_steps}}}_{\text{remaining}}]$
 where $p_i$ = probability for difficulty i
 
 ### Reward Function
-\begin{equation}
-\text{Reward} = \underbrace{(a+1)\cdot0.2}_{\text{Difficulty bonus}} + \underbrace{10(p_{new}-p_{old})}_{\text{Improvement}} + \underbrace{2\cdot\text{correct}}_{\text{Correctness}}
-\end{equation}
+$\text{Reward} = \underbrace{(a+1)\cdot0.2}_{\text{Difficulty bonus}} + \underbrace{10(p_{new}-p_{old})}_{\text{Improvement}} + \underbrace{2\cdot\text{correct}}_{\text{Correctness}}$
 
 ### Gradient Policy Theorem
 The core update rule for policy parameters $\theta$:
-\begin{equation}
-\nabla J(\theta) \approx \mathbb{E}\left[\sum_{t=0}^T \nabla_\theta\log\pi_\theta(a_t|s_t) \cdot A(s_t,a_t)\right]
-\end{equation}
+$\nabla J(\theta) \approx \mathbb{E}\left[\sum_{t=0}^T \nabla_\theta\log\pi_\theta(a_t|s_t) \cdot A(s_t,a_t)\right]$
 where $A(s_t,a_t)$ is the advantage function.
 
 ### Value Function Update
 
 The critic's temporal difference update:
-\begin{equation}
-V(s) \leftarrow V(s) + \alpha\left[\sum_{k=0}^\infty \gamma^k r_{t+k} - V(s)\right]
-\end{equation}
+$V(s) \leftarrow V(s) + \alpha\left[\sum_{k=0}^\infty \gamma^k r_{t+k} - V(s)\right]$
 
 ### Entropy Regularization
 Encourages exploration through:
