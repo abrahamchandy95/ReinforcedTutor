@@ -86,19 +86,6 @@ python src.main
 This model shows the student's knowledge progression. For difficulty level i \
 Probability update when correct is:
 
-$$
-p_i^{(t+1)} = \min\left(p_i^{(t)} + c \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1+\frac{i}{N}\right), 0.95\right)
-$$
-
-Probability update when incorrect is:
-
-$$
-p_i^{(t+1)} = \max\left(p_i^{(t)} - w \cdot \underbrace{\alpha p_i(1-p_i)}_{X} \cdot \left(1-\frac{i}{2N}\right), 0.05\right)
-$$
-
-
-Original Paper Equations (Malpani et al.)
-
 Correct Answer Update:
 
 $p_i^{(t+1)} = p_i^{(t)} + c \cdot \alpha p_i(1-p_i)$
@@ -107,8 +94,7 @@ Incorrect Answer Update:
 
 $p_i^{(t+1)} = p_i^{(t)} - w \cdot \alpha p_i(1-p_i)$
 
-(In our approach, we added a difficulty modulation)
-When the user fails a difficult question, the system penalizes the user less than failing an easy question as N increases. this is why the smoothening uses 2N as the denominator for punishment but only N when rewarding.
+Original Paper Equations (Malpani et al.)
 
 Where:
 * alpha = learning rate

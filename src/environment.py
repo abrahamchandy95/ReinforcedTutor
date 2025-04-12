@@ -73,37 +73,36 @@ class Student:
 
     def update(self, difficulty: int, correct: bool) -> None:
         """
-            Update knowledge state based on question response.
+        Update the student's knowledge state for difficulty level 'difficulty'
+        according to the original formulation by Malpani et al.
 
-            Args:
-                difficulty (int): Question difficulty level
-                correct (bool): Whether the answer was correct
+        The update equations are:
 
-            Update Rules:
-            - Correct answers:
-                reward = 1 + (difficulty/levels)
-                new_prob = min(current + c * X * reward, 0.95)
-            - Incorrect answers:
-                penalty = 1 - (difficulty/levels)
-                new_prob = max(current + w * X * penalty, 0.05)
+        Correct answer:
+            p_i^{(t+1)} = p_i^{(t)} + c * α * p_i * (1 - p_i)
 
-            Where X = α * p * (1 - p) (learning rate scaled by uncertainty)
+        Incorrect answer:
+            p_i^{(t+1)} = p_i^{(t)} - w * α * p_i * (1 - p_i)
+
+        Args:
+            difficulty (int): The difficulty level index to update.
+            correct (bool): Indicates whether the response was correct.
         """
-        X = self.alpha * self.probs[difficulty] * (
-            1 - self.probs[difficulty]
-        )
+        # Retrieve the current probability for the given difficulty level.
+        current_prob = self.probs[difficulty]
+
+        # Calculate the base update term: X = α * p_i * (1 - p_i)
+        X = self.alpha * current_prob * (1 - current_prob)
+
+        # Update the probability based on whether the answer is correct.
         if correct:
-            # reward harder questions more
-            reward = 1 + (difficulty/self.levels)
-            # cap at 95% prob for smoothening
-            updated = self.probs[difficulty] + self.c * X * reward
-            self.probs[difficulty] = min(updated, 0.95)
+            new_prob = current_prob + self.c * X  # Correct response update.
         else:
-            # punish harder questions less
-            penalty = 1 - (difficulty/self.levels)
-            # cap at 5% prob min
-            updated = self.probs[difficulty] + self.w * X * penalty
-            self.probs[difficulty] = max(updated, 0.05)
+            new_prob = current_prob - self.w * X  # Incorrect response update.
+
+        # Save the updated probability back to the model.
+        self.probs[difficulty] = new_prob
+
 
 class ExamEnv:
     """
