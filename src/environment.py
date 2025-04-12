@@ -200,7 +200,7 @@ class ExamEnv:
         if len(self.difficulties) >= 2:
             x = np.arange(len(self.difficulties))
             p = Polynomial.fit(x, self.difficulties, 1)
-            difficulty_trend = p.coef[1]
+            difficulty_trend = float(p.coef[1])
         return np.concatenate(
             [
                 self.student.probs,
@@ -242,25 +242,20 @@ class ExamEnv:
             # leave room for random chance if student is unevaluated
             correct = bool(np.random.rand() < old_prob_success)
         self.corrects.append(correct)
-
         # update student model
         self.student.update(action, correct)
-        new_prob_success = self.student.probs[action]
         # rewards
         # incentive for harder questions
         difficulty_bonus = (action + 1) * 5
-        # incentivize improvement
-        improvement_reward = 10 * (new_prob_success - old_prob_success)
         correct_reward = 6 * correct
         # consistency reward
         consistency_reward = 0.0
         if len(self.difficulties) >= 5:
             std = np.std(self.difficulties)
-            consistency_reward = 0.5 * (1 - std)
+            consistency_reward = float(0.5 * (1 - std))
 
         total_reward = (
             difficulty_bonus +
-            improvement_reward +
             correct_reward +
             consistency_reward
         )

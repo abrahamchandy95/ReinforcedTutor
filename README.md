@@ -159,7 +159,7 @@ where $p_i$ = probability for difficulty i
 ### Reward Function
 
 $$
-R = 5(a+1) + 10(p_{\text{new}} - p_{\text{old}}) + 6c +
+R = 5(a+1) + 6c +
 \begin{cases}
 0.5(1 - \sigma), & \text{if } n \ge 5 \\
 0, & \text{if } n < 5
@@ -170,10 +170,6 @@ where:
 
 
 - $ a $: Action (difficulty level selected by the agent).
-
-- $ p_{\text{new}} $: Updated success probability after the action.
-
-- $ p_{\text{old}} $: Previous success probability before the action.
 
 - $ c $: Binary correctness indicator ($ 1 $ for correct, $ 0 $ for incorrect).
 
