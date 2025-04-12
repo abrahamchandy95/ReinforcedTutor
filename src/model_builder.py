@@ -43,7 +43,8 @@ class ActorCritic(nn.Module):
 
         # critic head estimates the expected return of the current states
         self.critic = nn.Sequential(
-            nn.Linear(hidden_size, 1)
+            nn.Linear(hidden_size, 1),
+            nn.Tanh()
         )
 
     def forward(self, state: Tensor)-> Tuple[Tensor, Tensor]:
